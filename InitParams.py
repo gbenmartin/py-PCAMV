@@ -39,7 +39,7 @@ def InitParams(init, n1, n2, ncomp, nobscomb, Isv):
         Av = []
         for i in xrange(n1):
             Av.append(np.identity(ncomp))
-            Av = np.array(Av)
+        Av = np.array(Av)
             
     if 'Muv' in init and init['Muv']:
         Muv = init['Muv']
@@ -50,11 +50,39 @@ def InitParams(init, n1, n2, ncomp, nobscomb, Isv):
         V = init['V']
     else:
         V = 1
-    #incomplete
+
+    #double check this
     if 'Sv' in init and init['Sv']:
-        Sv = init['Sv']
+        initSv=init['Sv']
+        if nobscomb < n2:
+            B,I=np.unique(Isv,return_index=True)
+            if len(initSv.shape) == 2:
+                Sv=[]
+                for j in xrange(nobscomb):                
+                    Sv.append(np.diag(initSv[:,j]))
+                Sv=np.array(Sv)
+            elif 'Isv' in init and init['Isv']]}:
+                Sv=initSv[init['Isv'][I]]
+            else:
+                Sv=[]
+                for j in xrange(nobscomb):
+                    Sv.append(initSv[Isv][I][j])
+                Sv=np.array(Sv)
+        else:
+            if len(initSv.shape) == 2:
+                Sv=[]
+                for j in xrange(n2):
+                    Sv.append(np.diag(initSv[:,j]))
+                Sv=np.array(Sv)
+            elif 'Isv' in init and init['Isv']]}:
+                Sv=initSv[init['Isv']]
+            elif len(initSv)==n2:
+                Sv=initSv
     else:
         Sv = []
+        for i in xrange(nobscomb):
+            Sv.append(np.identity(ncomp))
+        Sv = np.array(Sv)
 
     return A, S, Mu, V, Av, Sv, Muv     
 
