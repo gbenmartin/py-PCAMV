@@ -10,8 +10,8 @@ def rmempty(X):
 #def rmempty(X, Xprobe, init, verbose=0):
     [n1x,n2x] = X.shape
     if sparse.issparse(X):
-        Ic = [i[0] for i in np.argwhere(np.sum(X!=0,0)>0)]
-        Ir = [i[0] for i in np.argwhere(np.sum(X!=0,1)>0)]
+        Ic = np.nonzero(X.sum(axis=0)>0)[1]
+        Ir = np.nonzero(X.sum(axis=1)>0)[0]
     else:
         Ic = [i[0] for i in np.argwhere(np.sum(np.isnan(X)==False,0)>0)]
         Ir = [i[0] for i in np.argwhere(np.sum(np.isnan(X)==False,1)>0)]
